@@ -43,7 +43,7 @@ function getBuses(url) {
                     id: bus.plaka,
                     title: bus.plaka,
                     description: bus.durum,
-                    state: bus.durum == 'ILERLIYOR' ? 1 : bus.durum == 'HIZLANIYOR' ? 1 : bus.durum == 'DURUYOR' ? 2 : bus.durum == 'KONTAK_KAPALI' ? 3 : 0,
+                    state: bus.durum == 'ILERLIYOR' ? 1 : bus.durum == 'HIZLANIYOR' ? 1 : bus.durum == 'DURUYOR' ? 2 : bus.durum == 'KONTAK_KAPALI' ? 3 : 4,
                     address: bus.adres,
                     coordinates: [bus.lon, bus.lat],
                     longitude: bus.lon,
@@ -72,7 +72,7 @@ function getIcon(state) {
     const bus3 = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Aiga_bus_on_red_circle.svg/1024px-Aiga_bus_on_red_circle.svg.png';
     const bus4 = 'https://cdn0.iconfinder.com/data/icons/transportation-86/24/bus-circle-512.png';
     switch (state) {
-        case 0:
+        case 4:
             return bus4;
         case 1:
             return bus1;
@@ -128,54 +128,58 @@ async function initMap() {
                     url: getIcon(bus.properties.state),
                     scaledSize: new google.maps.Size(30, 30),
                 });
-                marker.properties = bus.properties;
+                markers[markers.indexOf(marker)].properties = bus.properties;
             }
         }
     }
 
+    let infoWindow = new google.maps.InfoWindow({
+        maxWidth: 300
+    })
+
     function setBuses() {
-        for (let i = 0; i < buses.length; i++) {
+        for (const bus of buses) {
             let marker = new google.maps.Marker({
-                position: buses[i].position,
+                position: bus.position,
                 icon: {
-                    url: getIcon(buses[i].properties.state),
+                    url: getIcon(bus.properties.state),
                     scaledSize: new google.maps.Size(30, 30),
                 },
                 map: map,
-                properties: buses[i].properties
+                properties: bus.properties
             });
 
             var info = new google.maps.InfoWindow({
                 maxWidth: 300,
-                content: `<h3>${marker.properties.title}</h3>` + `<p>Durum: <strong>${marker.properties.description}</strong><br />Adres: <strong>${marker.properties.address}</strong></p>`
             });
 
             google.maps.event.addListener(marker, 'click', function() {
-                info.open(map, marker);
+                info.setContent(`<h3>${marker.properties.title}</h3>` + `<p>Durum: <strong>${marker.properties.description}</strong><br />Adres: <strong>${marker.properties.address}</strong></p>`)
+                info.open(marker.get('map'), marker);
             });
             markers.push(marker);
         }
     }
 
     function setStops() {
-        for (let i = 0; i < stops.length; i++) {
+        for (const stop of stops) {
             let marker = new google.maps.Marker({
-                position: stops[i].position,
+                position: stop.position,
                 icon: {
                     url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Map_pin_icon.svg/800px-Map_pin_icon.svg.png',
                     scaledSize: new google.maps.Size(15, 25),
                 },
                 map: map,
-                properties: stops[i].properties
+                properties: stop.properties
             });
 
             var info = new google.maps.InfoWindow({
-                maxWidth: 300,
-                content: `<h5>${marker.properties.title}</h5>`
+                maxWidth: 300
             });
 
             google.maps.event.addListener(marker, 'click', function() {
-                info.open(map, marker);
+                info.setContent(`<h3>${marker.properties.title}</h3><p></p>`)
+                info.open(marker.get('map'), marker);
             });
             markers.push(marker);
         }
