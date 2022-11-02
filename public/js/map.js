@@ -1,4 +1,61 @@
+/*
+
+
+  ____       _    _      __  __        _____           _           _ 
+ |  _ \     | |  | |    |  \/  |      |  __ \         (_)         (_)
+ | |_) | ___| | _| | ___| \  / | ___  | |__) | __ ___  _  ___  ___ _ 
+ |  _ < / _ \ |/ / |/ _ \ |\/| |/ _ \ |  ___/ '__/ _ \| |/ _ \/ __| |
+ | |_) |  __/   <| |  __/ |  | |  __/ | |   | | | (_) | |  __/\__ \ |
+ |____/ \___|_|\_\_|\___|_|  |_|\___| |_|   |_|  \___/| |\___||___/_|
+                                                     _/ |            
+                                                    |__/             
+BekleMe Projesi 2022 (R) - Tüm hakları saklıdır!
+Projedeki tüm JavaScript fonksiyonları ile ilgili dökümentasyonu first.js içerisinde bulabilirsiniz.
+*/
+
+// Hangi sunucuyu kullanacağını round robin algoritmasına göre seçip, sunucular üzerine gelen yükü azaltır.
+async function loadBalance() {
+    const url2 = 'https://bekleme.yeditepe.edu.tr/bekleme-data-ring/ringVer.php';
+    const url = 'https://oksum.com.tr/api/bekleme/ringVer.php';
+
+    const endpoints = [url, url2];
+    const endpointsSize = endpoints.length - 1;
+
+    let pickedUrl;
+    let functioning = 0;
+
+    while (functioning == 0) {
+
+        if (loadBalancingKey > endpointsSize) {
+
+            loadBalancingKey = 0;
+        }
+        pickedUrl = endpoints[loadBalancingKey];
+        buses = await getBuses(pickedUrl);
+        if (buses) {
+
+            functioning = 1;
+        } else {
+
+            console.log(pickedUrl + " ile bağlantı kurulamadı!");
+        }
+
+        loadBalancingKey++;
+    }
+}
+
+// Haritayı oluşturur
 async function initMap() {
+    var myWrapper = $("#wrapper");
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+        myWrapper.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
+            // code to execute after transition ends
+            google.maps.event.trigger(map, 'resize');
+        });
+    });
+
     map = new google.maps.Map(document.getElementById("map"), {
         center: new google.maps.LatLng(40.971908, 29.152371),
         zoom: 16.5,
@@ -9,7 +66,7 @@ async function initMap() {
             mapTypeIds: ["roadmap", "terrain", "satellite", "hybrid"]
         }
     });
-
+    // Toggle dark & light mode
     let userViewCookie = getCookie("viewMode");
     if (userViewCookie == "0") {
         map.setOptions({ styles: noPoiDark });
@@ -19,25 +76,30 @@ async function initMap() {
 
     setMapStyles(userViewCookie)
 
+    setMapSide()
+
+    // durak ve ikon markerlarını oluşturuyor
     stops = await getStops()
     setStops();
     icons = await inSchoolLocs();
     setIcons();
     autoUpdate();
-
-    let url = 'https://oksum.com.tr/api/bekleme/ringVer.php';
-    let url2 = 'https://bekleme.yeditepe.edu.tr/bekleme-data-ring/ringVer.php';
-
-    buses = await getBuses(url)
-    if (!buses) buses = await etBuses(url2)
-
+    await loadBalance();
     setBuses();
 
+    // Saati kontrol et
+    const date = new Date();
+    const hour = date.getHours();
+    const min = date.getMinutes();
+    if ((hour < 8 && minute < 15) && (hour > 0 && minute > 0)) {
+        alert("UYARI! Şu an saat 08:15'den önce veya 00:00'dan geç olduğu için ringlerin konumları güncellenmiyor. Lütfen daha sonra tekrar deneyin.");
+    }
+
+    // 3000 ms de bir haritayı güncelliyor
     window.setInterval(async function() {
         autoUpdate();
-        buses = await getBuses(url);
-        if (!buses) buses = await getBuses(url2);
+        await loadBalance();
         updateMarkers();
-    }, 6 * 1000)
+    }, 3 * 1000)
 }
 window.initMap = initMap;

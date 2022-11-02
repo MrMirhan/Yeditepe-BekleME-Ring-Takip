@@ -1,3 +1,19 @@
+/*
+
+
+  ____       _    _      __  __        _____           _           _ 
+ |  _ \     | |  | |    |  \/  |      |  __ \         (_)         (_)
+ | |_) | ___| | _| | ___| \  / | ___  | |__) | __ ___  _  ___  ___ _ 
+ |  _ < / _ \ |/ / |/ _ \ |\/| |/ _ \ |  ___/ '__/ _ \| |/ _ \/ __| |
+ | |_) |  __/   <| |  __/ |  | |  __/ | |   | | | (_) | |  __/\__ \ |
+ |____/ \___|_|\_\_|\___|_|  |_|\___| |_|   |_|  \___/| |\___||___/_|
+                                                     _/ |            
+                                                    |__/             
+BekleMe Projesi 2022 (R) - Tüm hakları saklıdır!
+Projedeki tüm JavaScript fonksiyonları ile ilgili dökümentasyonu first.js içerisinde bulabilirsiniz.
+*/
+
+// Harita üzerindeki markerların eklenmesini/güncellenmesini, aynı zamanda en yakın otobüs ve durak bilgisini hesaplayan fonksiyondur. 
 function autoUpdate() {
     navigator.geolocation.getCurrentPosition(function(position) {
         var newPoint = new google.maps.LatLng(position.coords.latitude,
@@ -5,7 +21,7 @@ function autoUpdate() {
 
         if (locMarker) {
             // Marker already created - Move it
-            locMarker.setPosition(newPoint);
+            animatedMove(locMarker, locMarker.position, newPoint)
         } else {
             // Marker does not exist - Create it
             locMarker = new google.maps.Marker({
@@ -54,12 +70,35 @@ function autoUpdate() {
     });
 }
 
+function animatedMove(marker, current, moveto) {
+    var deltalat = (moveto.lat() - current.lat()) / 100;
+    var deltalng = (moveto.lng() - current.lng()) / 100;
+    console.log(deltalat, deltalng)
+    for (var i = 0; i < 100; i++) {
+        (function(ind) {
+            setTimeout(
+                function() {
+                    var lat = marker.position.lat();
+                    var lng = marker.position.lng();
+
+                    lat += deltalat;
+                    lng += deltalng;
+                    latlng = new google.maps.LatLng(lat, lng);
+                    marker.setPosition(latlng);
+                }, 10 * ind
+            );
+        })(i)
+    }
+}
+
+// Otobüslerin yerini günceller
 function updateMarkers() {
     for (const marker of markers) {
         let bus = buses.find(bus => bus.properties.id == marker.properties.id);
         if (bus) {
             var pos = new google.maps.LatLng(bus.properties.latitude, bus.properties.longitude)
-            marker.setPosition(pos);
+            var exPos = new google.maps.LatLng(marker.properties.latitude, marker.properties.longitude)
+            animatedMove(marker, exPos, pos)
             marker.setIcon({
                 url: getIcon(bus.properties.state),
                 scaledSize: new google.maps.Size(30, 30),
