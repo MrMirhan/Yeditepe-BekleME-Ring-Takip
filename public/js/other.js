@@ -96,11 +96,12 @@ function parseBuses(data) {
     return busesIn;
 }
 
+// Sidebar açma fonksiyonu
 function openNav() {
     document.getElementById("mySidebar").style.width = "250px";
 }
 
-/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+// Sidebar kapama fonksiyonu
 function closeNav() {
     document.getElementById("mySidebar").style.width = "0";
 }

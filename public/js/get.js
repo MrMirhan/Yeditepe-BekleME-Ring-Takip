@@ -80,19 +80,19 @@ async function getBuses(url) {
 function getIcon(state) {
     switch (state) {
         case 1:
-            return '/icon/bus.png';
+            return '/ringV2/icon/bus.png';
         case 2:
-            return '/icon/bus-rolanti.png';
+            return '/ringV2/icon/bus-rolanti.png';
         case 3:
-            return '/icon/bus-kkontak.png';
+            return '/ringV2/icon/bus-kkontak.png';
         case 4:
-            return '/icon/bus-gpsariza.png';
+            return '/ringV2/icon/bus-gpsariza.png';
         case 5:
-            return '/icon/bus-gpsariza.png';
+            return '/ringV2/icon/bus-gpsariza.png';
         case 6:
-            return '/icon/bus-kampusdisi.png';
+            return '/ringV2/icon/bus-kampusdisi.png';
         default:
-            return '/icon/bus-gpsariza.png';
+            return '/ringV2/icon/bus-gpsariza.png';
     }
 }
 // Otobüs durumunu daha temiz şekilde göstermek amacıyla sayı halinden kullanıcıya gösterilen yazıyı döndürür.

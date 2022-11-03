@@ -15,8 +15,8 @@ Projedeki tüm JavaScript fonksiyonları ile ilgili dökümentasyonu first.js i�
 
 // Hangi sunucuyu kullanacağını round robin algoritmasına göre seçip, sunucular üzerine gelen yükü azaltır.
 async function loadBalance() {
-    const url2 = 'https://bekleme.yeditepe.edu.tr/bekleme-data-ring/ringVer.php';
-    const url = 'https://oksum.com.tr/api/bekleme/ringVer.php';
+    const url = 'https://bekleme.yeditepe.edu.tr/bekleme-data-ring/ringVer.php';
+    const url2 = 'https://oksum.com.tr/api/bekleme/ringVer.php';
 
     const endpoints = [url, url2];
     const endpointsSize = endpoints.length - 1;
@@ -73,9 +73,15 @@ async function initMap() {
     } else if (userViewCookie == "1") {
         map.setOptions({ styles: noPoi });
     }
+	
+	// Versiyonu yaz
+	try {
+		document.getElementById("version").innerHTML = "v" + version;
+	} catch(err) {
+		// ?????????
+	}
 
     setMapStyles(userViewCookie)
-
     setMapSide()
 
     // durak ve ikon markerlarını oluşturuyor
@@ -90,9 +96,8 @@ async function initMap() {
     // Saati kontrol et
     const date = new Date();
     const hour = date.getHours();
-    const min = date.getMinutes();
-    if ((hour < 8 && minute < 15) && (hour > 0 && minute > 0)) {
-        alert("UYARI! Şu an saat 08:15'den önce veya 00:00'dan geç olduğu için ringlerin konumları güncellenmiyor. Lütfen daha sonra tekrar deneyin.");
+    if (hour < 8 && hour > 0) {
+        alert("UYARI! Şu an saat 08:15'den önce veya 00:00'dan geç olduğu için İstek Servis A.Ş ringleri servis dışı olabilir. Lütfen daha sonra tekrar deneyin.");
     }
 
     // 3000 ms de bir haritayı güncelliyor

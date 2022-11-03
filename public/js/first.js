@@ -36,20 +36,25 @@ initMap                 -> Haritayı oluşturur
 * other.js
 inSchoolLocs            -> Okulun içinde bulunan önemli yerlere ikonlar yerleştirir.
 parseBuses              -> Otobüs bilgilerini temize çeker, ayırır.
+openNav					-> Sidebar açma fonksiyonu.
+closeNav				-> Sidebar kapama fonksiyonu.
 
 * set.js
 setBuses                -> Otobüsleri haritaya ekler
 setStops                -> Durak bilgilerini ekler
 setIcons                -> İkonları ayarlar
 setMapStyles            -> Dark light butonunu ekler
+setMapSide				-> Slider açma butonunu ekler
 
 * update.js
 autoUpdate              -> Harita üzerindeki markerların eklenmesini/güncellenmesini, aynı zamanda en yakın otobüs ve durak bilgisini hesaplayan fonksiyondur. 
+animatedMove			-> Harita üzerindeki markerların animasyonlu hareketini sağlar.
 updateMarkers           -> Otobüslerin yerini günceller
 
 
 */
 
+const version = "2.0.0";
 let map;
 let buses;
 let stops;
@@ -75,6 +80,7 @@ BekleMe Projesi 2022 (R) - Tüm hakları saklıdır!
 
 // Console banner
 console.log(banner);
+console.log("Version: " + version);
 
 // Haritanın light modu
 var noPoi = [{

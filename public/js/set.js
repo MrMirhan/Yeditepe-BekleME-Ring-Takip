@@ -48,7 +48,7 @@ function setStops() {
         let marker = new google.maps.Marker({
             position: stop.position,
             icon: {
-                url: '/icon/bus-stop-wm.svg.png',
+                url: '/ringV2/icon/bus-stop-wm.svg.png',
                 scaledSize: new google.maps.Size(20, 28),
             },
             map: map,
@@ -94,18 +94,7 @@ function setIcons() {
 function setMapStyles(defaultV) {
     function createCenterControl(map) {
         const controlButton = document.createElement("button");
-        controlButton.style.backgroundColor = "#fff";
-        controlButton.style.border = "0px solid #fff";
-        controlButton.style.borderRadius = "3px";
-        controlButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-        controlButton.style.color = "rgb(25,25,25)";
-        controlButton.style.cursor = "pointer";
-        controlButton.style.fontFamily = "Roboto,Arial,sans-serif";
-        controlButton.style.fontSize = "25px";
-        controlButton.style.lineHeight = "38px";
-        controlButton.style.margin = "8px 10 22px";
-        controlButton.style.padding = "0 5px";
-        controlButton.style.textAlign = "center";
+        controlButton.classList.add("control-button");
 
         if (!defaultV || defaultV == undefined || defaultV == null || defaultV == "" || defaultV == " ") {
             controlButton.textContent = "☀️"
@@ -135,21 +124,11 @@ function setMapStyles(defaultV) {
     map.controls[google.maps.ControlPosition.LEFT_TOP].push(centerControlDiv);
 }
 
+// Slider açma butonunu ekler
 function setMapSide() {
     function createSidebarButton(map) {
         const controlButton = document.createElement("button");
-        controlButton.style.backgroundColor = "#fff";
-        controlButton.style.border = "0px solid #fff";
-        controlButton.style.borderRadius = "3px";
-        controlButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-        controlButton.style.color = "rgb(25,25,25)";
-        controlButton.style.cursor = "pointer";
-        controlButton.style.fontFamily = "Roboto,Arial,sans-serif";
-        controlButton.style.fontSize = "25px";
-        controlButton.style.lineHeight = "38px";
-        controlButton.style.margin = "8px 10 22px";
-        controlButton.style.padding = "0 5px";
-        controlButton.style.textAlign = "center";
+        controlButton.classList.add("control-button");
 
         controlButton.textContent = '☰'
 

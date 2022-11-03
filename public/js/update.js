@@ -70,10 +70,11 @@ function autoUpdate() {
     });
 }
 
+// Harita üzerindeki markerların animasyonlu hareketini sağlar.
 function animatedMove(marker, current, moveto) {
     var deltalat = (moveto.lat() - current.lat()) / 100;
     var deltalng = (moveto.lng() - current.lng()) / 100;
-    console.log(deltalat, deltalng)
+    
     for (var i = 0; i < 100; i++) {
         (function(ind) {
             setTimeout(
